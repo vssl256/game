@@ -19,6 +19,7 @@ public class Map {
 				}
 				System.out.println();
 			}
+            
 			char mov = sc.next().charAt(0);
 			switch (mov) {
 				case 'w' -> movy--;

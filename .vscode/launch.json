@@ -6,6 +6,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "KeyLoggerWindow",
+            "request": "launch",
+            "mainClass": "KeyLoggerWindow",
+            "projectName": "game_725298a7"
+        },
+        {
+            "type": "java",
+            "name": "Movement",
+            "request": "launch",
+            "mainClass": "Movement",
+            "projectName": "game_725298a7"
+        },
+        {
+            "type": "java",
+            "name": "DungeonCrawler",
+            "request": "launch",
+            "mainClass": "DungeonCrawler",
+            "projectName": "game_725298a7"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"

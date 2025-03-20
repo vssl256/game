@@ -1,18 +1,36 @@
+import java.io.IOException;
 import java.util.Scanner;
 public class Map {
 		static Scanner sc = new Scanner(System.in);
 
-		static int x = 66;
+		static int x = 33;
 		static int y = 11;
+
 		static int movx = x/2;
+		public static void setMovx(int movx) {
+			Map.movx = movx;
+		}
+		public static int getMovx() {
+			return movx;
+		}
+		
 		static int movy = y/2;
+		public static void setMovy(int movy) {
+			Map.movy = movy;
+		}
+		public static int getMovy() {
+			return movy;
+		}
+
 		static int prevmovx = x/2;
 		static int prevmovy = y/2;
 		static int vector = -1;
 
 		static char[][] map = new char[y][x];
 		static char[][] mapOverlay = new char[y][x];
+
 		static boolean rep = true;
+		
 	public static int getX() {
 		return x;
 	}
@@ -45,7 +63,12 @@ public class Map {
 		getMap();
 			prevmovx = movx;
 			prevmovy = movy;
-			char mov = sc.next().charAt(0);
+			char mov = 0;
+			try {
+				mov = (char)Movement.Start();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			switch (mov) {
 				case 'w' -> movy--;
 				case 's' -> movy++;
@@ -59,7 +82,7 @@ public class Map {
 			if (movy < 1) movy = 1;
 
 
-			System.out.println("\033[H\033[2J");
+			ClearConsole.init();
 	}
     	sc.close();
 	}

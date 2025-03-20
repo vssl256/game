@@ -1,5 +1,4 @@
 import java.util.Scanner;
-
 public class Map {
 		static Scanner sc = new Scanner(System.in);
 
@@ -14,7 +13,9 @@ public class Map {
 		static char[][] map = new char[y][x];
 		static char[][] mapOverlay = new char[y][x];
 		static boolean rep = true;
-
+	public static int getX() {
+		return x;
+	}
 	public static void createMap() {
 		for (int cy = 0; cy < y; cy++) {
 			for (int cx = 0; cx < x; cx++) {

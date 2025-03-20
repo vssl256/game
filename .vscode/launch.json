@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Test",
+            "request": "launch",
+            "mainClass": "Test",
+            "projectName": "game_725298a7"
+        },
+        {
+            "type": "java",
             "name": "KeyLoggerWindow",
             "request": "launch",
             "mainClass": "KeyLoggerWindow",

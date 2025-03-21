@@ -39,9 +39,10 @@ public class Map {
 	public static void createMap() {
 		for (int cy = 0; cy < y; cy++) {
 			for (int cx = 0; cx < x; cx++) {
-				map[cy][cx] = '▫';
+				map[cy][cx] = '.';
 				if ((cy<1||cx<1)||(cy>y-2||cx>x-2)) map[cy][cx] = '■';
-				if (cy==5&&cx==5) map[cy][cx] = '■';
+				
+				if (cy==5&&cx==5) map[cy][cx] = '▓';
 			}
 		}
 		mapOverlay = new char[y][x];
@@ -60,9 +61,18 @@ public class Map {
 		} 
 	}
 	public static void move() throws InterruptedException {
-		
-		System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
-		System.out.print("▲");
+		if (map[movy][movx]!='▓') System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
+		else {
+			System.out.print("\033[" + (prevmovy + 1) + ";" + ((prevmovx * 2) + 1) + "H");
+			movy = prevmovy;
+			movx = prevmovx;
+		}
+		if (prevmovy == movy) {
+			System.out.print((movx > prevmovx) ? "►" : "◄");
+		} else {
+			System.out.print((movy > prevmovy) ? "▼" : "▲");
+		}
+		//System.out.print("▲");
 		System.out.print("\033[" + (y + 2) + ";" + 0 + "H");
 		System.out.print("\033[2K"+"\n"+"\033[2K");
 		System.out.print("X: "+movx+"\nY: "+movy);

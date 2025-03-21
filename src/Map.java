@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Map {
 		static Scanner sc = new Scanner(System.in);
 
-		static int x = 33;
+		static int x = 11;
 		static int y = 11;
 
 		static int movx = x/2;
@@ -22,6 +22,8 @@ public class Map {
 			return movy;
 		}
 
+		static int xoffset = movx*2+1;
+		static int yoffset = movy-1;
 		static int prevmovx = x/2;
 		static int prevmovy = y/2;
 		static int vector = -1;
@@ -30,7 +32,7 @@ public class Map {
 		static char[][] mapOverlay = new char[y][x];
 
 		static boolean rep = true;
-		
+
 	public static int getX() {
 		return x;
 	}
@@ -49,18 +51,26 @@ public class Map {
 	public static void getMap() {
 		for (int cy = 0; cy < y; cy++) {
 			for (int cx = 0; cx < x; cx++) {
-				mapOverlay[prevmovy][prevmovx] = map[movy][movx];
-				if (cx == movx && cy == movy) mapOverlay[cy][cx] = '▲';
+				//mapOverlay[prevmovy][prevmovx] = map[movy][movx];
+				//if (cx == movx && cy == movy) mapOverlay[cy][cx] = '▲';
 				System.out.print(mapOverlay[cy][cx]+" ");
 			}
 			System.out.println();
 		} 
 	}
-    public static void Start() {
+	public static void move() throws InterruptedException {
+		
+		System.out.print("\033[" + yoffset + ";" + xoffset + "H");
+		System.out.print("▲");
+		Thread.sleep(200);
+	}
+    public static void Start() throws InterruptedException {
 		createMap();
 		System.out.println("Map created");
-	while (rep) {
 		getMap();
+	while (rep) {
+		//getMap();
+		move();
 			prevmovx = movx;
 			prevmovy = movy;
 			char mov = 0;
@@ -69,20 +79,22 @@ public class Map {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			System.out.print("\033[" + yoffset + ";" + xoffset + "H");
+			System.out.print(map[movy][movx]);
 			switch (mov) {
-				case 'w' -> movy--;
-				case 's' -> movy++;
-				case 'a' -> movx--;
-				case 'd' -> movx++;
+				case 'w' -> {movy--; yoffset--;}
+				case 's' -> {movy++; yoffset++;}
+				case 'a' -> {movx--; xoffset-=2;}
+				case 'd' -> {movx++; xoffset+=2;}
 				case 'q' -> System.exit(0);
 			}
-			if (movx > x-2) movx = x-2;
-			if (movx < 1) movx = 1;
-			if (movy > y-2) movy = y-2;
-			if (movy < 1) movy = 1;
+			//if (movx > x-2) movx = x-2;
+			//if (movx < 1) movx = 1;
+			//if (movy > y-2) movy = y-2;
+			//if (movy < 1) movy = 1;
 
 
-			ClearConsole.init();
+			//ClearConsole.init();
 	}
     	sc.close();
 	}

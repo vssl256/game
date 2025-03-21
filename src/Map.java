@@ -6,6 +6,8 @@ public class Map {
 		static int x = 33;
 		static int y = 11;
 
+		static String lastDirection = "▲";
+
 		static int movx = x/2;
 		public static void setMovx(int movx) {
 			Map.movx = movx;
@@ -61,16 +63,16 @@ public class Map {
 		} 
 	}
 	public static void move() throws InterruptedException {
-		if (map[movy][movx]!='▓') System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
+		if (map[movy][movx]!='▓') {
+
+			System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
+			System.out.print(lastDirection);
+		}
 		else {
 			System.out.print("\033[" + (prevmovy + 1) + ";" + ((prevmovx * 2) + 1) + "H");
 			movy = prevmovy;
 			movx = prevmovx;
-		}
-		if (prevmovy == movy) {
-			System.out.print((movx > prevmovx) ? "►" : "◄");
-		} else {
-			System.out.print((movy > prevmovy) ? "▼" : "▲");
+			System.out.print(lastDirection);
 		}
 		//System.out.print("▲");
 		System.out.print("\033[" + (y + 2) + ";" + 0 + "H");
@@ -96,10 +98,10 @@ public class Map {
 			System.out.print("\033[" + (prevmovy + 1) + ";" + ((prevmovx * 2) + 1) + "H");
 			System.out.print(map[prevmovy][prevmovx]);
 			switch (mov) {
-				case 'w' -> movy--;
-				case 's' -> movy++;
-				case 'a' -> movx--;
-				case 'd' -> movx++;
+				case 'w' -> {movy--; lastDirection = "▲";}
+				case 's' -> {movy++; lastDirection = "▼";}
+				case 'a' -> {movx--; lastDirection = "◄";}
+				case 'd' -> {movx++; lastDirection = "►";}
 				case 'q' -> System.exit(0);
 			}
 			movx = Math.max(1, Math.min(x - 2, movx));

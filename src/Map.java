@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Map {
 		static Scanner sc = new Scanner(System.in);
 
-		static int x = 11;
+		static int x = 33;
 		static int y = 11;
 
 		static int movx = x/2;
@@ -22,8 +22,8 @@ public class Map {
 			return movy;
 		}
 
-		static int xoffset = movx*2+1;
-		static int yoffset = movy-1;
+		static int xoffset = x;
+		static int yoffset = movy+1;
 		static int prevmovx = x/2;
 		static int prevmovy = y/2;
 		static int vector = -1;
@@ -60,13 +60,16 @@ public class Map {
 	}
 	public static void move() throws InterruptedException {
 		
-		System.out.print("\033[" + yoffset + ";" + xoffset + "H");
+		System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
 		System.out.print("▲");
-		Thread.sleep(200);
+		System.out.print("\033[" + (y + 2) + ";" + 0 + "H");
+		System.out.print("\033[2K"+"\n"+"\033[2K");
+		System.out.print("X: "+movx+"\nY: "+movy);
+		//Thread.sleep(200);
 	}
     public static void Start() throws InterruptedException {
 		createMap();
-		System.out.println("Map created");
+		ClearConsole.init();
 		getMap();
 	while (rep) {
 		//getMap();
@@ -79,19 +82,17 @@ public class Map {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			System.out.print("\033[" + yoffset + ";" + xoffset + "H");
-			System.out.print(map[movy][movx]);
+			System.out.print("\033[" + (prevmovy + 1) + ";" + ((prevmovx * 2) + 1) + "H");
+			System.out.print(map[prevmovy][prevmovx]);
 			switch (mov) {
-				case 'w' -> {movy--; yoffset--;}
-				case 's' -> {movy++; yoffset++;}
-				case 'a' -> {movx--; xoffset-=2;}
-				case 'd' -> {movx++; xoffset+=2;}
+				case 'w' -> movy--;
+				case 's' -> movy++;
+				case 'a' -> movx--;
+				case 'd' -> movx++;
 				case 'q' -> System.exit(0);
 			}
-			//if (movx > x-2) movx = x-2;
-			//if (movx < 1) movx = 1;
-			//if (movy > y-2) movy = y-2;
-			//if (movy < 1) movy = 1;
+			movx = Math.max(1, Math.min(x - 2, movx));
+            movy = Math.max(1, Math.min(y - 2, movy));
 
 
 			//ClearConsole.init();

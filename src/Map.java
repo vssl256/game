@@ -41,6 +41,7 @@ public class Map {
 			for (int cx = 0; cx < x; cx++) {
 				map[cy][cx] = '▫';
 				if ((cy<1||cx<1)||(cy>y-2||cx>x-2)) map[cy][cx] = '■';
+				if (cy==5&&cx==5) map[cy][cx] = '■';
 			}
 		}
 		mapOverlay = new char[y][x];

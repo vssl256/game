@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "mouse",
+            "request": "launch",
+            "mainClass": "mouse",
+            "projectName": "game_725298a7"
+        },
+        {
+            "type": "java",
             "name": "Test",
             "request": "launch",
             "mainClass": "Test",

@@ -1,7 +1,6 @@
 import java.io.IOException;
-import java.util.Scanner;
+
 public class Map {
-		static Scanner sc = new Scanner(System.in);
 
 		static int x = 33;
 		static int y = 11;
@@ -24,11 +23,8 @@ public class Map {
 			return movy;
 		}
 
-		static int xoffset = x;
-		static int yoffset = movy+1;
 		static int prevmovx = x/2;
 		static int prevmovy = y/2;
-		static int vector = -1;
 
 		static char[][] map = new char[y][x];
 		static char[][] mapOverlay = new char[y][x];
@@ -38,6 +34,24 @@ public class Map {
 	public static int getX() {
 		return x;
 	}
+
+	public static void Build(char block) {
+		switch (lastDirection) {
+			case "▲" -> mapOverlay[movy-1][movx] = block;
+			case "▼" -> mapOverlay[movy+1][movx] = block;
+			case "◄" -> mapOverlay[movy][movx-1] = block;
+			case "►" -> mapOverlay[movy][movx+1] = block;
+		}
+		ClearConsole.init();
+		getMap();
+	}
+
+	public static void resetMap() {
+		createMap();
+		ClearConsole.init();
+		getMap();
+	}
+
 	public static void createMap() {
 		for (int cy = 0; cy < y; cy++) {
 			for (int cx = 0; cx < x; cx++) {
@@ -52,41 +66,47 @@ public class Map {
         	System.arraycopy(map[cy], 0, mapOverlay[cy], 0, x);
     	}
 	}
+
 	public static void getMap() {
 		for (int cy = 0; cy < y; cy++) {
 			for (int cx = 0; cx < x; cx++) {
-				//mapOverlay[prevmovy][prevmovx] = map[movy][movx];
-				//if (cx == movx && cy == movy) mapOverlay[cy][cx] = '▲';
 				System.out.print(mapOverlay[cy][cx]+" ");
 			}
 			System.out.println();
 		} 
 	}
+
 	public static void move() throws InterruptedException {
-		if (map[movy][movx]!='▓') {
+
+		// Препятствия нет
+		if ((mapOverlay[movy][movx]=='.')) {
 
 			System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
 			System.out.print(lastDirection);
 		}
+
+		// Перпятствие есть
 		else {
 			System.out.print("\033[" + (prevmovy + 1) + ";" + ((prevmovx * 2) + 1) + "H");
 			movy = prevmovy;
 			movx = prevmovx;
 			System.out.print(lastDirection);
 		}
-		//System.out.print("▲");
-		System.out.print("\033[" + (y + 2) + ";" + 0 + "H");
+
+		// Отображение координат игрока
+		System.out.print("\033[" + (y+1) + ";" + 0 + "H");
 		System.out.print("\033[2K"+"\n"+"\033[2K");
-		System.out.print("X: "+movx+"\nY: "+movy);
-		//Thread.sleep(200);
+		System.out.print("\033[" + (y+1) + ";" + 0 + "H");
+		System.out.println("X: "+movx+"\nY: "+movy);
+		System.out.print("WASD to move, C - build, X - destroy, R - restart, Q - quit.");
 	}
+	
     public static void Start() throws InterruptedException {
 		createMap();
 		ClearConsole.init();
 		getMap();
-	while (rep) {
-		//getMap();
-		move();
+		while (rep) {
+			move();
 			prevmovx = movx;
 			prevmovy = movy;
 			char mov = 0;
@@ -96,20 +116,19 @@ public class Map {
 				e.printStackTrace();
 			}
 			System.out.print("\033[" + (prevmovy + 1) + ";" + ((prevmovx * 2) + 1) + "H");
-			System.out.print(map[prevmovy][prevmovx]);
+			System.out.print(mapOverlay[prevmovy][prevmovx]);
 			switch (mov) {
 				case 'w' -> {movy--; lastDirection = "▲";}
 				case 's' -> {movy++; lastDirection = "▼";}
 				case 'a' -> {movx--; lastDirection = "◄";}
 				case 'd' -> {movx++; lastDirection = "►";}
 				case 'q' -> System.exit(0);
+				case 'c' -> Build('▓');
+				case 'x' -> Build('.');
+				case 'r' -> resetMap();
 			}
-			movx = Math.max(1, Math.min(x - 2, movx));
-            movy = Math.max(1, Math.min(y - 2, movy));
-
-
-			//ClearConsole.init();
-	}
-    	sc.close();
+			movx = Math.max(0, Math.min(x - 1, movx));
+            movy = Math.max(0, Math.min(y - 1, movy));
+		}
 	}
 }

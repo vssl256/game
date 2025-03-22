@@ -108,7 +108,7 @@ public class Map {
 		System.out.print("\033[" + (y+1) + ";" + 0 + "H");
 		System.out.print("\033[2K"+"\n"+"\033[2K");
 		System.out.print("\033[" + (y+1) + ";" + 0 + "H");
-		System.out.println("X: "+oub+"\nY: "+movy);
+		System.out.println("X: "+movx+"\nY: "+movy);
 		System.out.println("HP: "+Player.hpGet()+" ");
 		System.out.println("WASD to move, C - build, X - destroy, R - restart, Q - quit.");
 	}

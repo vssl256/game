@@ -2,7 +2,7 @@ import java.io.IOException;
 
 public class Map {
 
-		static int x = 33;
+		static int x = 34;
 		static int y = 11;
 
 		static String lastDirection = "▲";
@@ -58,7 +58,7 @@ public class Map {
 				map[cy][cx] = '.';
 				if ((cy<1||cx<1)||(cy>y-2||cx>x-2)) map[cy][cx] = '■';
 				
-				if (cy==5&&cx==5) map[cy][cx] = '▓';
+				if (cy==5&&cx==5) map[cy][cx] = 'x';
 			}
 		}
 		mapOverlay = new char[y][x];
@@ -78,27 +78,50 @@ public class Map {
 
 	public static void move() throws InterruptedException {
 
-		// Препятствия нет
-		if ((mapOverlay[movy][movx]=='.')) {
+        switch (mapOverlay[movy][movx]) {
+			
+        // Препятствия нет
+            case '.' -> {
+				OUBCheck();
+				if (oub) getMap();
+                System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
+                System.out.print(lastDirection);
+            }
 
-			System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
-			System.out.print(lastDirection);
-		}
+		// Шипы
+            case 'x' -> {
+                Player.hpSet(-5);
+                System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
+                System.out.print(lastDirection);
+            }
 
-		// Перпятствие есть
-		else {
-			System.out.print("\033[" + (prevmovy + 1) + ";" + ((prevmovx * 2) + 1) + "H");
-			movy = prevmovy;
-			movx = prevmovx;
-			System.out.print(lastDirection);
-		}
+		// Препятствие
+            default -> {
+                System.out.print("\033[" + (prevmovy + 1) + ";" + ((prevmovx * 2) + 1) + "H");
+                movy = prevmovy;
+                movx = prevmovx;
+                System.out.print(lastDirection);
+            }
+        }
 
 		// Отображение координат игрока
 		System.out.print("\033[" + (y+1) + ";" + 0 + "H");
 		System.out.print("\033[2K"+"\n"+"\033[2K");
 		System.out.print("\033[" + (y+1) + ";" + 0 + "H");
-		System.out.println("X: "+movx+"\nY: "+movy);
-		System.out.print("WASD to move, C - build, X - destroy, R - restart, Q - quit.");
+		System.out.println("X: "+oub+"\nY: "+movy);
+		System.out.println("HP: "+Player.hpGet()+" ");
+		System.out.println("WASD to move, C - build, X - destroy, R - restart, Q - quit.");
+	}
+	static boolean oub = false;
+	public static void OUBCheck() {
+		if ((movy==0||movx==0)||(movy==y-1||movx==x-1)) {
+			ClearConsole.init();
+			oub = true;
+			if (movy == 0) 		{movy = y - 1; return;}
+			if (movx == 0) 		{movx = x - 1; return;}
+			if (movy == y - 1) 	{movy = 0; return;}
+			if (movx == x - 1)	movx = 0;
+		} else oub = false;
 	}
 	
     public static void Start() throws InterruptedException {
@@ -122,10 +145,14 @@ public class Map {
 				case 's' -> {movy++; lastDirection = "▼";}
 				case 'a' -> {movx--; lastDirection = "◄";}
 				case 'd' -> {movx++; lastDirection = "►";}
+
 				case 'q' -> System.exit(0);
+				case 'r' -> resetMap();
+
 				case 'c' -> Build('▓');
 				case 'x' -> Build('.');
-				case 'r' -> resetMap();
+
+				case 'f' -> Player.hpSet(-25);
 			}
 			movx = Math.max(0, Math.min(x - 1, movx));
             movy = Math.max(0, Math.min(y - 1, movy));

@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Player {
@@ -5,12 +6,12 @@ public class Player {
     public static int hpGet() {
         return hp;
     }
-    public static int hpSet(int dif) throws InterruptedException {
+    public static int hpSet(int dif) throws InterruptedException, FileNotFoundException {
         hp+=dif;
         if (hp <= 0) deathScreen();
         return hp;
     }
-    public static void deathScreen() throws InterruptedException {
+    public static void deathScreen() throws InterruptedException, FileNotFoundException {
         ClearConsole.init();
         System.out.println("You died. Retry? (y/n):");
         Scanner sc = new Scanner(System.in);

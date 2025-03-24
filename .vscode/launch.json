@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "JSON",
+            "request": "launch",
+            "mainClass": "JSON",
+            "projectName": "game_725298a7"
+        },
+        {
+            "type": "java",
+            "name": "JSONtest",
+            "request": "launch",
+            "mainClass": "JSONtest",
+            "projectName": "game_725298a7"
+        },
+        {
+            "type": "java",
             "name": "Inventory",
             "request": "launch",
             "mainClass": "Inventory",

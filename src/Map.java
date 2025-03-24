@@ -1,41 +1,45 @@
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class Map {
 
-		static int x = 34;
-		static int y = 11;
+public class Map {
+	
+		static int x;
+		static int y;
 
 		static String lastDirection = "▲";
-
 		static int movx = x/2;
-		public static void setMovx(int movx) {
-			Map.movx = movx;
-		}
-		public static int getMovx() {
-			return movx;
-		}
 		
 		static int movy = y/2;
-		public static void setMovy(int movy) {
-			Map.movy = movy;
-		}
-		public static int getMovy() {
-			return movy;
-		}
 
 		static int prevmovx = x/2;
 		static int prevmovy = y/2;
 
-		static char[][] map = new char[y][x];
-		static char[][] mapOverlay = new char[y][x];
-
+		static char[][] map;
+		static char[][] mapOverlay;
+	
 		static boolean rep = true;
-
-	public static int getX() {
-		return x;
+		static String mapPath = "maps\\map1.json";
+	public static void load() throws FileNotFoundException {
+		map = JSON.loadMap(mapPath);
+		x = map[0].length;
+		y = map.length;
+		movx = JSON.mapData.playerX;
+		movy = JSON.mapData.playerY;
+		prevmovx = JSON.mapData.playerX;
+		prevmovy = JSON.mapData.playerY;
+		mapOverlay = new char[y][x];
+		for (int cy = 0; cy < y; cy++) {
+    		System.arraycopy(map[cy], 0, mapOverlay[cy], 0, x);
+		}
+		lastDirection = "▲";
+	}
+	public static void load(String nextPath) throws FileNotFoundException {
+		mapPath = nextPath;
+		load();
 	}
 
-	public static void Build(char block) {
+	public static void Build(char block) throws FileNotFoundException {
 		switch (lastDirection) {
 			case "▲" -> mapOverlay[movy-1][movx] = block;
 			case "▼" -> mapOverlay[movy+1][movx] = block;
@@ -46,26 +50,26 @@ public class Map {
 		getMap();
 	}
 
-	public static void resetMap() {
-		createMap();
+	public static void resetMap() throws FileNotFoundException {
+		load();
 		ClearConsole.init();
 		getMap();
 	}
 
-	public static void createMap() {
-		for (int cy = 0; cy < y; cy++) {
-			for (int cx = 0; cx < x; cx++) {
-				map[cy][cx] = '.';
-				if ((cy<1||cx<1)||(cy>y-2||cx>x-2)) map[cy][cx] = '■';
-				
-				if (cy==5&&cx==5) map[cy][cx] = 'x';
-			}
-		}
-		mapOverlay = new char[y][x];
-    	for (int cy = 0; cy < y; cy++) {
-        	System.arraycopy(map[cy], 0, mapOverlay[cy], 0, x);
-    	}
-	}
+	//public static void createMap() {
+	//	for (int cy = 0; cy < y; cy++) {
+	//		for (int cx = 0; cx < x; cx++) {
+	//			map[cy][cx] = '.';
+	//			if ((cy<1||cx<1)||(cy>y-2||cx>x-2)) map[cy][cx] = '■';
+	//			
+	//			if (cy==5&&cx==5) map[cy][cx] = 'x';
+	//		}
+	//	}
+	//	mapOverlay = new char[y][x];
+	//	for (int cy = 0; cy < y; cy++) {
+	//    	System.arraycopy(map[cy], 0, mapOverlay[cy], 0, x);
+	//	}
+	//}
 
 	public static void getMap() {
 		for (int cy = 0; cy < y; cy++) {
@@ -76,13 +80,19 @@ public class Map {
 		} 
 	}
 
-	public static void move() throws InterruptedException {
+	public static void move() throws InterruptedException, FileNotFoundException {
+
+		if (movy==JSON.mapData.doorY&&movx==JSON.mapData.doorX) {
+			load("maps\\map"+2+".json");
+			getMap();
+			return;
+		}
 
         switch (mapOverlay[movy][movx]) {
-			
+
         // Препятствия нет
             case '.' -> {
-				OUBCheck();
+				//OUBCheck();
 				if (oub) getMap();
                 System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
                 System.out.print(lastDirection);
@@ -124,8 +134,9 @@ public class Map {
 		} else oub = false;
 	}
 	
-    public static void Start() throws InterruptedException {
-		createMap();
+    public static void Start() throws InterruptedException, FileNotFoundException {
+		//createMap();
+		load();
 		ClearConsole.init();
 		getMap();
 		while (rep) {

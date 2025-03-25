@@ -14,6 +14,7 @@ public class JSON {
         public int doorY;
         public int doorX;
         public String[] map;
+        public int nextmap;
 
     }
     static GsonBuilder builder = new GsonBuilder();

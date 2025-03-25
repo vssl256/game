@@ -20,8 +20,10 @@ public class Map {
 	
 		static boolean rep = true;
 		static String mapPath = "maps\\map1.json";
+		static int nextmap;
 	public static void load() throws FileNotFoundException {
 		map = JSON.loadMap(mapPath);
+		nextmap = JSON.mapData.nextmap;
 		x = map[0].length;
 		y = map.length;
 		movx = JSON.mapData.playerX;
@@ -33,6 +35,8 @@ public class Map {
     		System.arraycopy(map[cy], 0, mapOverlay[cy], 0, x);
 		}
 		lastDirection = "▲";
+		ClearConsole.init();
+		getMap();
 	}
 	public static void load(String nextPath) throws FileNotFoundException {
 		mapPath = nextPath;
@@ -51,7 +55,7 @@ public class Map {
 	}
 
 	public static void resetMap() throws FileNotFoundException {
-		load();
+		//load();
 		ClearConsole.init();
 		getMap();
 	}
@@ -83,7 +87,9 @@ public class Map {
 	public static void move() throws InterruptedException, FileNotFoundException {
 
 		if (movy==JSON.mapData.doorY&&movx==JSON.mapData.doorX) {
-			load("maps\\map"+2+".json");
+			load("maps\\map"+nextmap+".json");
+			movx = JSON.mapData.doorX;
+			movy = JSON.mapData.doorY;
 			getMap();
 			return;
 		}

@@ -34,7 +34,6 @@ public class Map {
 		for (int cy = 0; cy < y; cy++) {
     		System.arraycopy(map[cy], 0, mapOverlay[cy], 0, x);
 		}
-		lastDirection = "▲";
 		ClearConsole.init();
 		getMap();
 	}
@@ -90,7 +89,10 @@ public class Map {
 			load("maps\\map"+nextmap+".json");
 			movx = JSON.mapData.doorX;
 			movy = JSON.mapData.doorY;
-			getMap();
+			System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
+			System.out.print(lastDirection);
+			//getMap();
+			statusBar();
 			return;
 		}
 
@@ -121,13 +123,18 @@ public class Map {
         }
 
 		// Отображение координат игрока
+		statusBar();
+	}
+	
+    public static void statusBar() {
 		System.out.print("\033[" + (y+1) + ";" + 0 + "H");
 		System.out.print("\033[2K"+"\n"+"\033[2K");
 		System.out.print("\033[" + (y+1) + ";" + 0 + "H");
 		System.out.println("X: "+movx+"\nY: "+movy);
 		System.out.println("HP: "+Player.hpGet()+" ");
 		System.out.println("WASD to move, C - build, X - destroy, R - restart, Q - quit.");
-	}
+    }
+
 	static boolean oub = false;
 	public static void OUBCheck() {
 		if ((movy==0||movx==0)||(movy==y-1||movx==x-1)) {

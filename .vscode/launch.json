@@ -9,7 +9,15 @@
             "name": "App",
             "request": "launch",
             "mainClass": "App",
-            "projectName": "game_515b945c"
+            "projectName": "game_4d58f5b0"
+        },
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "App",
+            "projectName": "game_515b945c",
+            "vmArgs": "--enable-native-access=ALL-UNNAMED"
         },
         {
             "type": "java",
@@ -78,7 +86,8 @@
             "name": "App",
             "request": "launch",
             "mainClass": "App",
-            "projectName": "game_725298a7"
+            "projectName": "game_725298a7",
+            "vmArgs": "--enable-native-access=ALL-UNNAMED"
         }
     ]
 }

@@ -19,7 +19,7 @@ public class Map {
 		static char[][] mapOverlay;
 	
 		static boolean rep = true;
-		static String mapPath = "maps\\map1.json";
+		static String mapPath = "src\\maps\\map1.json";
 		static int nextmap;
 	public static void load() throws FileNotFoundException {
 		map = JSON.loadMap(mapPath);
@@ -86,7 +86,7 @@ public class Map {
 	public static void move() throws InterruptedException, FileNotFoundException {
 
 		if (movy==JSON.mapData.doorY&&movx==JSON.mapData.doorX) {
-			load("maps\\map"+nextmap+".json");
+			load("src\\maps\\map"+nextmap+".json");
 			movx = JSON.mapData.doorX;
 			movy = JSON.mapData.doorY;
 			System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
@@ -125,7 +125,6 @@ public class Map {
 		// Отображение координат игрока
 		statusBar();
 	}
-	
     public static void statusBar() {
 		System.out.print("\033[" + (y+1) + ";" + 0 + "H");
 		System.out.print("\033[2K"+"\n"+"\033[2K");
@@ -133,6 +132,8 @@ public class Map {
 		System.out.println("X: "+movx+"\nY: "+movy);
 		System.out.println("HP: "+Player.hpGet()+" ");
 		System.out.println("WASD to move, C - build, X - destroy, R - restart, Q - quit.");
+		System.out.print("\033[" + (y+1) + ";" + (x*2-mapPath.length()-5) + "H");
+		System.out.println("map: "+mapPath);
     }
 
 	static boolean oub = false;

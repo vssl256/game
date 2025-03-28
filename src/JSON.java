@@ -2,8 +2,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class JSON {
     public class MapData {
@@ -11,22 +11,27 @@ public class JSON {
         public int height;
         public int playerY;
         public int playerX;
-        public int doorY;
-        public int doorX;
         public String[] map;
-        public int nextmap;
+        
+        public Door[] doors;
+        public static class Door {
+            public int x;
+            public int y;
+            public int target;
+        }
+
 
     }
     static GsonBuilder builder = new GsonBuilder();
     static Gson gson = builder.create();
-    static Reader reader;
+    static InputStream reader;
     static MapData mapData;
 
 
     public static char[][] loadMap(String jsonPath) throws FileNotFoundException {
-        reader = new FileReader(jsonPath);
+        reader = JSON.class.getResourceAsStream(jsonPath);
 
-        mapData = gson.fromJson(reader, MapData.class);
+        mapData = gson.fromJson(new InputStreamReader(reader), MapData.class);
 
         char[][] parsedMap = new char[mapData.height][mapData.width];
 

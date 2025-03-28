@@ -19,11 +19,11 @@ public class Map {
 		static char[][] mapOverlay;
 	
 		static boolean rep = true;
-		static String mapPath = "src\\maps\\map1.json";
+		static String mapPath = "maps\\map1.json";
 		static int nextmap;
+
 	public static void load() throws FileNotFoundException {
 		map = JSON.loadMap(mapPath);
-		nextmap = JSON.mapData.nextmap;
 		x = map[0].length;
 		y = map.length;
 		movx = JSON.mapData.playerX;
@@ -82,20 +82,23 @@ public class Map {
 			System.out.println();
 		} 
 	}
-
 	public static void move() throws InterruptedException, FileNotFoundException {
 
-		if (movy==JSON.mapData.doorY&&movx==JSON.mapData.doorX) {
-			load("src\\maps\\map"+nextmap+".json");
-			movx = JSON.mapData.doorX;
-			movy = JSON.mapData.doorY;
-			System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
-			System.out.print(lastDirection);
-			//getMap();
-			statusBar();
-			return;
-		}
+		for (JSON.MapData.Door door : JSON.mapData.doors) {
 
+			if (movx == door.x && movy == door.y) {
+
+				load("maps\\map"+door.target+".json");
+
+				System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
+				System.out.print(lastDirection);
+				//getMap();
+				statusBar();
+				return;
+
+			}
+
+		}
         switch (mapOverlay[movy][movx]) {
 
         // Препятствия нет

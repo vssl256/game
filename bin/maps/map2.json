@@ -1,7 +1,7 @@
 {
     "width": 33,
     "height": 7,
-    "playerY": 6,
+    "playerY": 3,
     "playerX": 16,
     "doorY": 6,
     "doorX": 16,
@@ -14,5 +14,7 @@
     "             ■.....■             ",
     "             ■■■#■■■             "
     ],
-    "nextmap": 1
+    "doors": [
+        {"x":16,"y":6,"target":1}
+    ]
 }

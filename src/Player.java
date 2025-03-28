@@ -13,7 +13,7 @@ public class Player {
         return hp;
     }
     public static void deathScreen() throws InterruptedException, FileNotFoundException {
-        ClearConsole.init();
+        Console.clear();
         System.out.println("You died. Retry? (y/n):");
         Scanner sc = new Scanner(System.in);
         if (sc.next().charAt(0)=='y') {

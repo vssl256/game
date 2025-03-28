@@ -31,7 +31,7 @@ public class Map {
 		for (int cy = 0; cy < y; cy++) {
     		System.arraycopy(map[cy], 0, mapOverlay[cy], 0, x);
 		}
-		ClearConsole.init();
+		Console.clear();
 		getMap();
 	}
 	public static void load(String nextPath) throws FileNotFoundException {
@@ -46,12 +46,12 @@ public class Map {
 			case "◄" -> mapOverlay[movy][movx-1] = block;
 			case "►" -> mapOverlay[movy][movx+1] = block;
 		}
-		ClearConsole.init();
+		Console.clear();
 		getMap();
 	}
 
 	public static void resetMap() throws FileNotFoundException {
-		ClearConsole.init();
+		Console.clear();
 		getMap();
 	}
 
@@ -64,14 +64,6 @@ public class Map {
 		} 
 	}
 
-	public static void cursorSet(int y, int x) {
-		System.out.print("\033[" + y + ";" + x + "H");
-	}
-
-	public static void rowClear() {
-		System.out.print("\033[2K"+"\n"+"\033[2K");
-	}
-
 	public static void move() throws InterruptedException, FileNotFoundException {
 
 		for (JSON.MapData.Door door : JSON.mapData.doors) {
@@ -82,7 +74,7 @@ public class Map {
 					movy = door.targetY;
 				currentMap = door.target;
 				load("/maps/map"+currentMap+".json");
-				cursorSet((movy + 1), ((movx * 2) + 1));
+				Console.cursorSet((movy + 1), ((movx * 2) + 1));
 				System.out.print(lastDirection);
 				statusBar();
 				return;
@@ -95,20 +87,20 @@ public class Map {
         // Препятствия нет
             case '.' -> {
 				if (oub) getMap();
-                cursorSet((movy + 1),((movx * 2) + 1));
+                Console.cursorSet((movy + 1),((movx * 2) + 1));
                 System.out.print(lastDirection);
             }
 
 		// Шипы
             case 'x' -> {
                 Player.hpSet(-5);
-                cursorSet((movy + 1), ((movx * 2) + 1));
+                Console.cursorSet((movy + 1), ((movx * 2) + 1));
                 System.out.print(lastDirection);
             }
 
 		// Препятствие
             default -> {
-                cursorSet((prevmovy + 1), ((prevmovx * 2) + 1));
+                Console.cursorSet((prevmovy + 1), ((prevmovx * 2) + 1));
                 movy = prevmovy;
                 movx = prevmovx;
                 System.out.print(lastDirection);
@@ -119,20 +111,20 @@ public class Map {
 		statusBar();
 	}
     public static void statusBar() throws FileNotFoundException, InterruptedException {
-		cursorSet((y+1), 0);
-		rowClear();
-		cursorSet((y+1), 0);
+		Console.cursorSet((y+1), 0);
+		Console.rowClear();
+		Console.cursorSet((y+1), 0);
 		System.out.println("X: "+movx+"\nY: "+movy);
 		System.out.println("HP: "+Player.hpGet()+" ");
 		System.out.println("WASD to move, C - build, X - destroy, R - restart, Q - quit.");
-		cursorSet((y+1), (x*2-mapPath.length()-5));
+		Console.cursorSet((y+1), (x*2-mapPath.length()-5));
 		System.out.println("map: "+mapPath);
     }
 
 	static boolean oub = false;
 	public static void OUBCheck() {
 		if ((movy==0||movx==0)||(movy==y-1||movx==x-1)) {
-			ClearConsole.init();
+			Console.clear();
 			oub = true;
 			if (movy == 0) 		{movy = y - 1; return;}
 			if (movx == 0) 		{movx = x - 1; return;}
@@ -143,7 +135,7 @@ public class Map {
 	
     public static void Start() throws InterruptedException, FileNotFoundException {
 		load();
-		ClearConsole.init();
+		Console.clear();
 		getMap();
 		while (rep) {
 			move();
@@ -155,7 +147,7 @@ public class Map {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			cursorSet((prevmovy + 1), ((prevmovx * 2) + 1));
+			Console.cursorSet((prevmovy + 1), ((prevmovx * 2) + 1));
 			System.out.print(mapOverlay[prevmovy][prevmovx]);
 			switch (mov) {
 				case 'w' -> {movy--; lastDirection = "▲";}

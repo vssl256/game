@@ -25,12 +25,8 @@ public class Map {
 
 	public static void load() throws FileNotFoundException {
 		map = JSON.loadMap(mapPath);
-		x = map[0].length;
-		y = map.length;
-		//movx = JSON.mapData.playerX;
-		//movy = JSON.mapData.playerY;
-		//prevmovx = JSON.mapData.playerX;
-		//prevmovy = JSON.mapData.playerY;
+		x = JSON.mapData.width;
+		y = JSON.mapData.height;
 		mapOverlay = new char[y][x];
 		for (int cy = 0; cy < y; cy++) {
     		System.arraycopy(map[cy], 0, mapOverlay[cy], 0, x);
@@ -55,25 +51,9 @@ public class Map {
 	}
 
 	public static void resetMap() throws FileNotFoundException {
-		//load();
 		ClearConsole.init();
 		getMap();
 	}
-
-	//public static void createMap() {
-	//	for (int cy = 0; cy < y; cy++) {
-	//		for (int cx = 0; cx < x; cx++) {
-	//			map[cy][cx] = '.';
-	//			if ((cy<1||cx<1)||(cy>y-2||cx>x-2)) map[cy][cx] = '■';
-	//			
-	//			if (cy==5&&cx==5) map[cy][cx] = 'x';
-	//		}
-	//	}
-	//	mapOverlay = new char[y][x];
-	//	for (int cy = 0; cy < y; cy++) {
-	//    	System.arraycopy(map[cy], 0, mapOverlay[cy], 0, x);
-	//	}
-	//}
 
 	public static void getMap() {
 		for (int cy = 0; cy < y; cy++) {
@@ -83,6 +63,15 @@ public class Map {
 			System.out.println();
 		} 
 	}
+
+	public static void cursorSet(int y, int x) {
+		System.out.print("\033[" + y + ";" + x + "H");
+	}
+
+	public static void rowClear() {
+		System.out.print("\033[2K"+"\n"+"\033[2K");
+	}
+
 	public static void move() throws InterruptedException, FileNotFoundException {
 
 		for (JSON.MapData.Door door : JSON.mapData.doors) {
@@ -93,9 +82,8 @@ public class Map {
 					movy = door.targetY;
 				currentMap = door.target;
 				load("/maps/map"+currentMap+".json");
-				System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
+				cursorSet((movy + 1), ((movx * 2) + 1));
 				System.out.print(lastDirection);
-				//getMap();
 				statusBar();
 				return;
 
@@ -106,22 +94,21 @@ public class Map {
 
         // Препятствия нет
             case '.' -> {
-				//OUBCheck();
 				if (oub) getMap();
-                System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
+                cursorSet((movy + 1),((movx * 2) + 1));
                 System.out.print(lastDirection);
             }
 
 		// Шипы
             case 'x' -> {
                 Player.hpSet(-5);
-                System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
+                cursorSet((movy + 1), ((movx * 2) + 1));
                 System.out.print(lastDirection);
             }
 
 		// Препятствие
             default -> {
-                System.out.print("\033[" + (prevmovy + 1) + ";" + ((prevmovx * 2) + 1) + "H");
+                cursorSet((prevmovy + 1), ((prevmovx * 2) + 1));
                 movy = prevmovy;
                 movx = prevmovx;
                 System.out.print(lastDirection);
@@ -131,14 +118,14 @@ public class Map {
 		// Отображение координат игрока
 		statusBar();
 	}
-    public static void statusBar() {
-		System.out.print("\033[" + (y+1) + ";" + 0 + "H");
-		System.out.print("\033[2K"+"\n"+"\033[2K");
-		System.out.print("\033[" + (y+1) + ";" + 0 + "H");
+    public static void statusBar() throws FileNotFoundException, InterruptedException {
+		cursorSet((y+1), 0);
+		rowClear();
+		cursorSet((y+1), 0);
 		System.out.println("X: "+movx+"\nY: "+movy);
 		System.out.println("HP: "+Player.hpGet()+" ");
 		System.out.println("WASD to move, C - build, X - destroy, R - restart, Q - quit.");
-		System.out.print("\033[" + (y+1) + ";" + (x*2-mapPath.length()-5) + "H");
+		cursorSet((y+1), (x*2-mapPath.length()-5));
 		System.out.println("map: "+mapPath);
     }
 
@@ -155,7 +142,6 @@ public class Map {
 	}
 	
     public static void Start() throws InterruptedException, FileNotFoundException {
-		//createMap();
 		load();
 		ClearConsole.init();
 		getMap();
@@ -169,7 +155,7 @@ public class Map {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			System.out.print("\033[" + (prevmovy + 1) + ";" + ((prevmovx * 2) + 1) + "H");
+			cursorSet((prevmovy + 1), ((prevmovx * 2) + 1));
 			System.out.print(mapOverlay[prevmovy][prevmovx]);
 			switch (mov) {
 				case 'w' -> {movy--; lastDirection = "▲";}

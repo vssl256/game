@@ -3,8 +3,6 @@
     "height": 7,
     "playerY": 3,
     "playerX": 16,
-    "doorY": 6,
-    "doorX": 16,
     "map": [
     "             ■■■■■■■             ",
     "             ■.....■             ",
@@ -15,6 +13,12 @@
     "             ■■■#■■■             "
     ],
     "doors": [
-        {"x":16,"y":6,"target":1}
+        {
+            "x":16,
+            "y":6,
+            "target":1,
+            "targetX":16,
+            "targetY":0
+        }
     ]
 }

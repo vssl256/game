@@ -8,28 +8,29 @@ public class Map {
 		static int y;
 
 		static String lastDirection = "▲";
-		static int movx = x/2;
-		
-		static int movy = y/2;
 
-		static int prevmovx = x/2;
-		static int prevmovy = y/2;
+		static int movx = 16;
+		static int movy = 3;
+
+		static int prevmovx;
+		static int prevmovy;
 
 		static char[][] map;
 		static char[][] mapOverlay;
 	
 		static boolean rep = true;
-		static String mapPath = "maps\\map1.json";
-		static int nextmap;
+		static String mapPath = "/maps/map1.json";
+
+		static int currentMap = 1;
 
 	public static void load() throws FileNotFoundException {
 		map = JSON.loadMap(mapPath);
 		x = map[0].length;
 		y = map.length;
-		movx = JSON.mapData.playerX;
-		movy = JSON.mapData.playerY;
-		prevmovx = JSON.mapData.playerX;
-		prevmovy = JSON.mapData.playerY;
+		//movx = JSON.mapData.playerX;
+		//movy = JSON.mapData.playerY;
+		//prevmovx = JSON.mapData.playerX;
+		//prevmovy = JSON.mapData.playerY;
 		mapOverlay = new char[y][x];
 		for (int cy = 0; cy < y; cy++) {
     		System.arraycopy(map[cy], 0, mapOverlay[cy], 0, x);
@@ -88,8 +89,10 @@ public class Map {
 
 			if (movx == door.x && movy == door.y) {
 
-				load("maps\\map"+door.target+".json");
-
+					movx = door.targetX;
+					movy = door.targetY;
+				currentMap = door.target;
+				load("/maps/map"+currentMap+".json");
 				System.out.print("\033[" + (movy + 1) + ";" + ((movx * 2) + 1) + "H");
 				System.out.print(lastDirection);
 				//getMap();

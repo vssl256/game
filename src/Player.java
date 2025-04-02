@@ -22,5 +22,6 @@ public class Player {
             Map.Start();
         }
         else System.exit(666);
+        sc.close();
     }
 }

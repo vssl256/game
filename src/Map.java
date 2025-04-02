@@ -64,7 +64,7 @@ public class Map {
 		} 
 	}
 
-	public static void move() throws InterruptedException, FileNotFoundException {
+	public static void move() throws InterruptedException, IOException {
 
 		for (JSON.MapData.Door door : JSON.mapData.doors) {
 
@@ -110,7 +110,7 @@ public class Map {
 		// Отображение координат игрока
 		statusBar();
 	}
-    public static void statusBar() throws FileNotFoundException, InterruptedException {
+    public static void statusBar() throws InterruptedException, IOException {
 		Console.cursorSet((y+1), 0);
 		Console.rowClear();
 		Console.cursorSet((y+1), 0);
@@ -133,7 +133,7 @@ public class Map {
 		} else oub = false;
 	}
 	
-    public static void Start() throws InterruptedException, FileNotFoundException {
+    public static void Start() throws InterruptedException, IOException {
 		load();
 		Console.clear();
 		getMap();
@@ -142,11 +142,7 @@ public class Map {
 			prevmovx = movx;
 			prevmovy = movy;
 			char mov = 0;
-			try {
-				mov = (char)Movement.Start();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			mov = (char)Movement.Start();
 			Console.cursorSet((prevmovy + 1), ((prevmovx * 2) + 1));
 			System.out.print(mapOverlay[prevmovy][prevmovx]);
 			switch (mov) {

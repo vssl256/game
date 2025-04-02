@@ -1,7 +1,7 @@
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 class App {
-	public static void main(String[] args) throws InterruptedException, FileNotFoundException {
+	public static void main(String[] args) throws InterruptedException, IOException {
 		Map.Start();
 	}
 }
